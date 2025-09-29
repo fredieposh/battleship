@@ -12,9 +12,12 @@ class GameBoard {
     };
 
     placeShipOnBoard(ship, row, column, isHorizontal = true) {
-        if(row < 0 || row > 9 || column < 0 || column > 9) {
-            return "Placing coordinates have to be within the board boundries.";
-        };
+        try{
+            this.#checkHorizontalBoundries(column);
+            this.#checkVerticallBoundries(row);
+        } catch(error) {
+            return 'Placing coordinates have to be within the board boundries.';
+        }
 
         const shipSize = ship.getShipSize();
         let cloneBoard;
@@ -26,6 +29,9 @@ class GameBoard {
                 cloneBoard = this.#placeShipVertically(shipSize, row, column);
             };
         } catch(error) {
+            if (error.message === 'Can\'t place ship on another ship.') {
+                return error.message;
+            }
             return "The ship is out of board bounds. Please place it again.";
         }
 
@@ -38,6 +44,7 @@ class GameBoard {
         const cloneBoard = this.#cloneBoard();
         for(let i = 0; i < shipSize; i++) {
             this.#checkHorizontalBoundries(i + column);
+            this.#checkIfCoordinateHasShip(row ,i + column);
             cloneBoard[row][i + column] = 1;
         };
 
@@ -48,6 +55,7 @@ class GameBoard {
         const cloneBoard = this.#cloneBoard();
         for(let i = 0; i < shipSize; i++) {
             this.#checkVerticallBoundries(i + row);
+            this.#checkIfCoordinateHasShip(i + row, column);
             cloneBoard[i + row][column] = 1;
         };
 
@@ -72,14 +80,22 @@ class GameBoard {
     }
 
     #checkHorizontalBoundries(column) {
-        if (column > 9) {
+        if (column > 9 || column < 0) {
             throw new Error("Ship is out of columns bounds");
         }
     };
 
     #checkVerticallBoundries(row) {
-        if (row > 9) {
+        if (row > 9 || row < 0) {
             throw new Error("Ship is out of rows bounds");
         }
     };
+
+    #checkIfCoordinateHasShip(row, column) {
+        console.log(`row: ${row}, column: ${column}, value: ${this.#board[row][column]}`);
+        if (this.#board[row][column] === 1) {
+            throw new Error('Can\'t place ship on another ship.');
+        }
+    }
+
 };
