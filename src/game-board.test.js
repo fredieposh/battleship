@@ -7,8 +7,8 @@ describe('test placeShipOnBoard function', () => {
         const ship = new Ship('Destroyer');
 
         const changedGameBoared =  gameBoard.placeShipOnBoard(ship, 2, 5, true).board;
-        expect(changedGameBoared[2][5]).toBe(1);
-        expect(changedGameBoared[2][6]).toBe(1);
+        expect(changedGameBoared[2][5]).toBe(ship.getShipType());
+        expect(changedGameBoared[2][6]).toBe(ship.getShipType());
 
     });
 
@@ -17,8 +17,8 @@ describe('test placeShipOnBoard function', () => {
         const ship = new Ship('Destroyer');
 
         const changedGameBoared =  gameBoard.placeShipOnBoard(ship, 2, 5, false).board;
-        expect(changedGameBoared[2][5]).toBe(1);
-        expect(changedGameBoared[3][5]).toBe(1);
+        expect(changedGameBoared[2][5]).toBe(ship.getShipType());
+        expect(changedGameBoared[3][5]).toBe(ship.getShipType());
 
     });
 
@@ -27,8 +27,8 @@ describe('test placeShipOnBoard function', () => {
         const ship = new Ship('Destroyer');
 
         const changedGameBoared =  gameBoard.placeShipOnBoard(ship, 2, 5, false).board;
-        expect(changedGameBoared[2][5]).toBe(1);
-        expect(changedGameBoared[3][5]).toBe(1);
+        expect(changedGameBoared[2][5]).toBe(ship.getShipType());
+        expect(changedGameBoared[3][5]).toBe(ship.getShipType());
 
     });
 
