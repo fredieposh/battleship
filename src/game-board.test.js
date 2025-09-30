@@ -43,4 +43,19 @@ describe('test placeShipOnBoard function', () => {
         gameBoard.placeShipOnBoard(ship1, 1, 1, false);
         expect(gameBoard.placeShipOnBoard(ship2, 1, 0, true)).toBe("Can\'t place ship on another ship.");
     });
+
+    test('test that placing a ship horizontally adds 1 to shipsCounter', () => {
+        const board = new GameBoard();
+        const ship = new Ship('Destroyer');
+
+        expect(board.placeShipOnBoard(ship, 0, 0, true).shipsCounter).toBe(1);
+    });
+
+    test('test that placing 2 ships adds 2 to shipsCounter', () => {
+        const board = new GameBoard();
+        const ship = new Ship('Destroyer');
+        
+        board.placeShipOnBoard(ship, 0, 2, false)
+        expect(board.placeShipOnBoard(ship, 0, 0, true).shipsCounter).toBe(2);
+    });
 });
