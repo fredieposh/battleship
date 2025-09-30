@@ -58,4 +58,13 @@ describe('test placeShipOnBoard function', () => {
         board.placeShipOnBoard(ship, 0, 2, false)
         expect(board.placeShipOnBoard(ship, 0, 0, true).shipsCounter).toBe(2);
     });
+
+    test('test that the ship is added to GameBoard.ships object', () => {
+        const board = new GameBoard();
+        const ship = new Ship('Destroyer');
+        const shipType = ship.getShipType();
+        
+        board.placeShipOnBoard(ship, 0, 2, false)
+        expect(board.getShip(shipType).getShipType()).toBe(shipType);
+    });
 });
