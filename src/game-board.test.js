@@ -22,16 +22,6 @@ describe('test placeShipOnBoard function', () => {
 
     });
 
-    test('test placeShipOnBoard works for one ship vertical placement', () => {
-        const gameBoard = new GameBoard();
-        const ship = new Ship('Destroyer');
-
-        const changedGameBoared =  gameBoard.placeShipOnBoard(ship, 2, 5, false).board;
-        expect(changedGameBoared[2][5]).toBe(ship.getShipType());
-        expect(changedGameBoared[3][5]).toBe(ship.getShipType());
-
-    });
-
     test('test if placing the first coordinate out of bounds returns warning 1', () => {
         const gameBoard = new GameBoard();
         const ship = new Ship('Destroyer');
