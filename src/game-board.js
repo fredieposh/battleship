@@ -41,9 +41,14 @@ class GameBoard {
         }
 
         this.#copyShipFromCloneboardToBoard(cloneBoard, shipSize, row, column, isHorizontal);
-        this.#shipsCounter ++;
+        this.#addToShipsCounter();
+        this.#addShipToShips(ship);
 
         return {board: this.#board, shipsCounter: this.#shipsCounter};
+    };
+
+    getShip(shipType) {
+        return this.#ships[shipType];
     };
 
     #placeShipHorizontally(shipSize, shipType, row, column) {
@@ -101,6 +106,14 @@ class GameBoard {
         if (this.#board[row][column] !== null) {
             throw new Error('Can\'t place ship on another ship.');
         }
+    };
+
+    #addToShipsCounter() {
+        this.#shipsCounter ++;
+    };
+
+    #addShipToShips(ship) {
+        this.#ships[ship.getShipType()] = ship;
     }
 
 };
