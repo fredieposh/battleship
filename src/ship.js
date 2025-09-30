@@ -21,6 +21,10 @@ class Ship {
         this.#isShipSunk = false;
     };
 
+    getShipType() {
+        return this.#shipType;
+    };
+
     isSunk() {
         return this.#isShipSunk;
     };
