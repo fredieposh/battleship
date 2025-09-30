@@ -2,9 +2,13 @@ export {GameBoard};
 
 class GameBoard {
     #board;
+    #ships;
+    #shipsCounter;
 
     constructor(){
         this.#board = new Array(10).fill().map(() => Array(10).fill(null));
+        this.#ships = {};
+        this.#shipsCounter == 0;
     }
 
     getBoard() {
