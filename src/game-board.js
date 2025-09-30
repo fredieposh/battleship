@@ -8,7 +8,7 @@ class GameBoard {
     constructor(){
         this.#board = new Array(10).fill().map(() => Array(10).fill(null));
         this.#ships = {};
-        this.#shipsCounter == 0;
+        this.#shipsCounter = 0;
     }
 
     getBoard() {
@@ -41,8 +41,9 @@ class GameBoard {
         }
 
         this.#copyShipFromCloneboardToBoard(cloneBoard, shipSize, row, column, isHorizontal);
+        this.#shipsCounter ++;
 
-        return {board: this.#board};
+        return {board: this.#board, shipsCounter: this.#shipsCounter};
     };
 
     #placeShipHorizontally(shipSize, shipType, row, column) {
