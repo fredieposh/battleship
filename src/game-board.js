@@ -4,7 +4,7 @@ class GameBoard {
     #board;
 
     constructor(){
-        this.#board = new Array(10).fill().map(() => Array(10).fill(-1));
+        this.#board = new Array(10).fill().map(() => Array(10).fill(null));
     }
 
     getBoard() {
@@ -20,13 +20,14 @@ class GameBoard {
         }
 
         const shipSize = ship.getShipSize();
+        const shipType = ship.getShipType()
         let cloneBoard;
 
         try {
             if(isHorizontal) {
-                cloneBoard = this.#placeShipHorizontally(shipSize, row, column);
+                cloneBoard = this.#placeShipHorizontally(shipSize, shipType, row, column);
             } else {
-                cloneBoard = this.#placeShipVertically(shipSize, row, column);
+                cloneBoard = this.#placeShipVertically(shipSize, shipType, row, column);
             };
         } catch(error) {
             if (error.message === 'Can\'t place ship on another ship.') {
@@ -40,23 +41,23 @@ class GameBoard {
         return {board: this.#board};
     };
 
-    #placeShipHorizontally(shipSize, row, column) {
+    #placeShipHorizontally(shipSize, shipType, row, column) {
         const cloneBoard = this.#cloneBoard();
         for(let i = 0; i < shipSize; i++) {
             this.#checkHorizontalBoundries(i + column);
             this.#checkIfCoordinateHasShip(row ,i + column);
-            cloneBoard[row][i + column] = 1;
+            cloneBoard[row][i + column] = shipType;
         };
 
         return cloneBoard;
     };
 
-    #placeShipVertically(shipSize, row, column) {
+    #placeShipVertically(shipSize, shipType, row, column) {
         const cloneBoard = this.#cloneBoard();
         for(let i = 0; i < shipSize; i++) {
             this.#checkVerticallBoundries(i + row);
             this.#checkIfCoordinateHasShip(i + row, column);
-            cloneBoard[i + row][column] = 1;
+            cloneBoard[i + row][column] = shipType;
         };
 
         return cloneBoard;
@@ -92,8 +93,7 @@ class GameBoard {
     };
 
     #checkIfCoordinateHasShip(row, column) {
-        console.log(`row: ${row}, column: ${column}, value: ${this.#board[row][column]}`);
-        if (this.#board[row][column] === 1) {
+        if (this.#board[row][column] !== null) {
             throw new Error('Can\'t place ship on another ship.');
         }
     }
