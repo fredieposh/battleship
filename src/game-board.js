@@ -21,7 +21,7 @@ class GameBoard {
             this.#checkVerticallBoundries(row);
         } catch(error) {
             return 'Placing coordinates have to be within the board boundries.';
-        }
+        };
 
         const shipSize = ship.getShipSize();
         const shipType = ship.getShipType()
@@ -38,7 +38,7 @@ class GameBoard {
                 return error.message;
             }
             return "The ship is out of board bounds. Please place it again.";
-        }
+        };
 
         this.#copyShipFromCloneboardToBoard(cloneBoard, shipSize, row, column, isHorizontal);
         this.#addToShipsCounter();
@@ -49,6 +49,32 @@ class GameBoard {
 
     getShip(shipType) {
         return this.#ships[shipType];
+    };
+
+    getShipCounter() {
+        return this.#shipsCounter();
+    }
+
+    receiveAttack(row, column) {
+        try{
+            this.#checkHorizontalBoundries(column);
+            this.#checkVerticallBoundries(row);
+        } catch(error) {
+            return 'A hit coordinates have to be within the board boundries.';
+        };
+        
+        if(this.#board[row][column] === null) {
+            this.#board[row][column] = 'x';
+            return this.#board[row][column];
+        };
+        
+        if(this.#board[row][column] !== null && this.#board[row][column] !== 'x') {
+            const shipType = this.#board[row][column];
+            const ship = this.#ships[shipType];
+            const hitShipType = this.#hitShip(ship);
+            return {hitShipType, shipsCounter: this.#shipsCounter,};
+        };
+        
     };
 
     #placeShipHorizontally(shipSize, shipType, row, column) {
@@ -110,10 +136,26 @@ class GameBoard {
 
     #addToShipsCounter() {
         this.#shipsCounter ++;
+        return this.#shipsCounter;
+    };
+
+    #subFromShipsCounter() {
+        this.#shipsCounter --;
+        return this.#shipsCounter;
     };
 
     #addShipToShips(ship) {
         this.#ships[ship.getShipType()] = ship;
+    }
+
+    #hitShip(ship) {
+        ship.hit();
+
+        if(ship.isSunk()) {
+            this.#subFromShipsCounter();
+        }
+
+        return ship.getShipType();
     }
 
 };
