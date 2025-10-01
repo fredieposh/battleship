@@ -68,3 +68,36 @@ describe('test placeShipOnBoard function', () => {
         expect(board.getShip(shipType).getShipType()).toBe(shipType);
     });
 });
+
+describe('test receiveAttack function', () => {
+    test('test that a hit on an empty coordinate', () => {
+        const board = new GameBoard();
+        const ship = new Ship('Destroyer');
+
+        board.placeShipOnBoard(ship, 1, 1, true);
+        expect((board.receiveAttack(0, 0))).toBe('x');
+    });
+
+    test('test that a ship hit returns the ship type', () => {
+        const board = new GameBoard();
+        const ship = new Ship('Destroyer');
+
+        board.placeShipOnBoard(ship, 1, 1, true);
+        expect(board.receiveAttack(1, 2).hitShipType).toBe(ship.getShipType());
+    });
+
+    test('test that a ships counter is sub by 1 if a ship is sunk', () => {
+        const board = new GameBoard();
+        const ship = new Ship('Destroyer');
+
+        board.placeShipOnBoard(ship, 1, 1, true);
+        
+        let {hitShipType , shipsCounter} = board.receiveAttack(1, 2);
+        expect(hitShipType).toBe(ship.getShipType());
+        expect(shipsCounter).toBe(1);
+        
+        ({hitShipType , shipsCounter} = board.receiveAttack(1, 2));
+        expect(hitShipType).toBe(ship.getShipType());
+        expect(shipsCounter).toBe(0);
+    });
+});
