@@ -35,6 +35,8 @@ body {
 
 #stats-container > .header {
     text-align: center;
+    font-size: 2rem;
+    font-weight: 600;
 }
 
 #players-container {
@@ -49,15 +51,44 @@ body {
 
 #players-container  p {
     text-align: center;
+    font-weight: 600;
+    font-size: 1.2rem;
 }
 
 #player-1-container, #player-2-container {
     display: flex;
     flex-direction: column;
+    gap: 10px;
 }
 
 #player-1-container > :last-child, #player-2-container > :last-child {
     flex: 1;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.ship-div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.dom-ship {
+    margin-top: 15px;
+}
+
+.part-0,
+.part-1,
+.part-2,
+.part-3,
+.part-4 {
+    height: 2rem;
+    width: 2rem;
+    border: 0.5px solid black;
+    border-radius: 2px;
+    background-color: #4ECE7E;
+
 }
 
 /* ==================================================================== */
