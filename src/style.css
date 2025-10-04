@@ -12,7 +12,7 @@
 body {
     height: 100vh;
     overflow-y: hidden;
-    padding: 1rem 20rem;
+    padding: 1rem 10rem;
 
 }
 
@@ -52,9 +52,12 @@ body {
 
 #game-container {
     flex: 7;
+     display: flex;
+    gap: 20px;
 }
 
-#board-container {
+#human-board-container, #computer-board-container {
+    flex: 1;
     height: 100%;
     display: grid;
     grid-template-rows: repeat(10, 1fr);
