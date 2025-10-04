@@ -1,4 +1,5 @@
-export {Ship};
+export {Ship, getShipSizeByType};
+import {copyObj} from './utils.js';
 
 const shipSizeByType = {
     Carrier:	5,
@@ -58,4 +59,9 @@ class Ship {
         this.#checkShipState();
         return this.#shipHitsNumber;
     };
+};
+
+function getShipSizeByType() {
+    const shipSizeByTypeCopy = copyObj(shipSizeByType);
+    return shipSizeByTypeCopy;
 }
