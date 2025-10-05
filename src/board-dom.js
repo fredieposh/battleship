@@ -26,3 +26,9 @@ function createBoardTileDiv(user, row, column) {
 
     return newTile;
 };
+
+function changeTileColor(obj) {
+    const {user, row, column, reason} = obj;
+    const selectedTile = document.querySelector(`#${user}-${row}-${column}`);
+    selectedTile.classList.add(reason)
+}
