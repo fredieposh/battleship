@@ -2,13 +2,18 @@ import {Ship, getShipSizeByType} from './ship.js';
 import {GameBoard} from './game-board.js';
 import {coinFlip, drawNumner} from './utils.js';
 import {publish} from './pub-sub.js';
-export {placeShipsOnHumanBoard};
+export {placeShipsOnAllPlayersBoards};
 
 const shipBySize = getShipSizeByType();
 const humanGameBoard = new GameBoard();
 const computerGameBoard = new GameBoard();
 
-function placeShipsOnHumanBoard() {
+function placeShipsOnAllPlayersBoards() {
+    placeShipsOnBoard(humanGameBoard);
+    placeShipsOnBoard(computerGameBoard);
+};
+
+function placeShipsOnBoard(board) {
     for ( const ship in shipBySize) {
         const newShip = new Ship(ship);
         let placeShipResult;
@@ -19,12 +24,14 @@ function placeShipsOnHumanBoard() {
             row = drawNumner();
             col = drawNumner();
             direction =  coinFlip();
-            placeShipResult = humanGameBoard.placeShipOnBoard(newShip, row, col, direction);
+            placeShipResult = board.placeShipOnBoard(newShip, row, col, direction);
         } while (typeof placeShipResult === 'string');
-        publishTilesChange('human', row, col, direction, newShip.getShipSize(), 'placed-ship');
-    };
 
-    console.log(humanGameBoard);
+        if (board === humanGameBoard) {
+            publishTilesChange('human', row, col, direction, newShip.getShipSize(), 'placed-ship');
+        };
+    };
+    console.log(board);
 };
 
 function publishTilesChange(user, row, column, direction, length, reason) {
