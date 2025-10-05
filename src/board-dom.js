@@ -22,7 +22,11 @@ function createBoardDom(user, container) {
 
 function createBoardTileDiv(user, row, column) {
     const newTile = document.createElement('div');
-    newTile.classList.add('board-tile');
+    if (user === 'human') {
+        newTile.classList.add('board-tile-human');
+    } else {
+        newTile.classList.add('board-tile');
+    };
     newTile.setAttribute('id',`${user}-${row}-${column}`);
 
     return newTile;
