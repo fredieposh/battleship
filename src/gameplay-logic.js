@@ -1,6 +1,7 @@
-import {Ship, getShipSizeByType} from './ship.js'
-import {GameBoard} from './game-board.js'
-import { coinFlip, drawNumner} from './utils.js'
+import {Ship, getShipSizeByType} from './ship.js';
+import {GameBoard} from './game-board.js';
+import {coinFlip, drawNumner} from './utils.js';
+import {publish} from './pub-sub.js';
 export {placeShipsOnHumanBoard};
 
 const shipBySize = getShipSizeByType();
@@ -9,15 +10,31 @@ const computerGameBoard = new GameBoard();
 
 function placeShipsOnHumanBoard() {
     for ( const ship in shipBySize) {
+        const newShip = new Ship(ship);
         let placeShipResult;
+        let row;
+        let col;
+        let direction;
         do {
-            const newShip = new Ship(ship);
-            const row = drawNumner();
-            const col = drawNumner();
-            const direction =  coinFlip();
+            row = drawNumner();
+            col = drawNumner();
+            direction =  coinFlip();
             placeShipResult = humanGameBoard.placeShipOnBoard(newShip, row, col, direction);
         } while (typeof placeShipResult === 'string');
+        publishTilesChange('human', row, col, direction, newShip.getShipSize(), 'placed-ship');
     };
 
     console.log(humanGameBoard);
-}
+};
+
+function publishTilesChange(user, row, column, direction, length, reason) {
+    if (direction) {
+        for(let i = column; i < column + length; i++) {
+            publish('changeTile', {user, row, column: i, reason});
+        };
+    } else {
+        for(let i = row; i < row + length; i++) {
+            publish('changeTile', {user, row: i, column, reason});
+        };        
+    };
+};

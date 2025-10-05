@@ -123,6 +123,10 @@ body {
     border-radius: 3px;
 }
 
+.board-tile.placed-ship {
+    background-color: #4ECE7E;
+}
+
 .board-tile:hover {
     cursor: pointer;
     background-color: #CFCFCF;

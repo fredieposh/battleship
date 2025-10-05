@@ -1,4 +1,5 @@
-export {loadBoards};
+import {subscribe} from './pub-sub.js'
+export {loadBoards}; 
 
 const humanUser = 'human';
 const computerUser = 'computer';
@@ -32,3 +33,9 @@ function changeTileColor(obj) {
     const selectedTile = document.querySelector(`#${user}-${row}-${column}`);
     selectedTile.classList.add(reason)
 }
+
+function subscribeFunction(event ,func) {
+    subscribe(event ,func);
+}; 
+
+subscribeFunction('changeTile',changeTileColor);
