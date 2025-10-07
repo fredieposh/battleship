@@ -1,4 +1,5 @@
-export {copyObj, coinFlip, drawNumner};
+import {subscribe, publish} from './pub-sub.js'
+export {copyObj, coinFlip, drawNumner, subscribeFunction};
 
 
 function copyObj(obj) {
@@ -14,3 +15,7 @@ function coinFlip() {
 function drawNumner() {
     return Math.floor(Math.random() * 10);
 }
+
+function subscribeFunction(event ,func) {
+    subscribe(event ,func);
+};
