@@ -1,14 +1,15 @@
-import {subscribe} from './pub-sub.js'
-export {loadBoards}; 
+import {subscribe, publish} from './pub-sub.js'
+export {loadBoards};
+import {subscribeFunction} from './utils.js'
 
 const humanUser = 'human';
 const computerUser = 'computer';
-const humanBoardDom = document.querySelector('#human-board-container');
-const computerBoardDom = document.querySelector('#computer-board-container');
+const humanBoardContainer = document.querySelector('#human-board-container');
+const computerBoardContainer = document.querySelector('#computer-board-container');
 
 function loadBoards() {
-    createBoardDom(humanUser, humanBoardDom );
-    createBoardDom(computerUser, computerBoardDom );
+    createBoardDom(humanUser, humanBoardContainer );
+    createBoardDom(computerUser, computerBoardContainer );
 };
 
 function createBoardDom(user, container) {
@@ -26,6 +27,7 @@ function createBoardTileDiv(user, row, column) {
         newTile.classList.add('board-tile-human');
     } else {
         newTile.classList.add('board-tile');
+        newTile.addEventListener('click', boardDomHit);
     };
     newTile.setAttribute('id',`${user}-${row}-${column}`);
 
@@ -33,13 +35,73 @@ function createBoardTileDiv(user, row, column) {
 };
 
 function changeTileColor(obj) {
-    const {user, row, column, reason} = obj;
-    const selectedTile = document.querySelector(`#${user}-${row}-${column}`);
-    selectedTile.classList.add(reason)
+    const {user, row, col, reason} = obj;
+    const selectedTile = getTileById(user, row, col);
+
+    if(user === 'computer') {
+        clearTileClasslist(selectedTile);
+    };
+
+    if (user === 'human' && selectedTile.classList.contains('placed-ship')) {
+        selectedTile.classList.remove('placed-ship');
+    }
+
+    selectedTile.classList.add(reason);
 }
 
-function subscribeFunction(event ,func) {
-    subscribe(event ,func);
-}; 
+function boardDomHit(e) {
+    const user = getTileUser(e)[0];
+    const coordinates = getTileCoordinatess(e);
+    const row = +coordinates[0]
+    const col = +coordinates[1]
+
+    publish('boardHit', {board: user, row, col});
+}
+
+function getTileUser(e) {
+    e.stopPropagation();
+    const reg = /[a-zA-z]+/g;
+    const tileId = e.target.id;
+    return tileId.match(reg);
+}
+
+function getTileCoordinatess(e) {
+    e.stopPropagation();
+    const reg = /\d+/g;
+    const tileId = e.target.id;
+    return tileId.match(reg);
+};
+
+function changeTileContent(obj) {
+    const {user, row, col, reason} = obj;
+    if (user === 'human') {
+        const selectedTile = getTileById(user, row, col);
+        reason === 'blank-hit' ? selectedTile.innerHTML = 'x': selectedTile.innerHTML = '';
+    };
+
+    if (user === 'computer') {
+        const selectedTile = getTileById(user, row, col);
+        if (reason === 'blank-hit') {
+            selectedTile.innerHTML = 'x';
+            selectedTile.removeEventListener('click', boardDomHit);
+            disableTile(selectedTile);
+        };
+    }
+};
+
+function getTileById(user, row, column) {
+    return document.querySelector(`#${user}-${row}-${column}`);
+}
+
+function disableTile(tile) {
+    tile.classList.remove('board-tile');
+    tile.classList.add('board-tile-disabled');
+}
+
+function clearTileClasslist(tile) {
+    console.log(tile);
+    tile.classList = [];
+}
 
 subscribeFunction('changeTile',changeTileColor);
+subscribeFunction('changeTileContent',changeTileContent);

@@ -123,14 +123,34 @@ body {
     border-radius: 3px;
 }
 
+.board-tile-disabled {
+    border: 0.5px solid black;
+    background-color: #F4F4F4;
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.6rem;
+}
+
 .board-tile-human {
     border: 0.5px solid black;
     background-color: #F4F4F4;
     border-radius: 3px;
 }
 
+.hit-ship {
+    border: 0.5px solid black;
+    background-color: #b50d0d;
+    border-radius: 3px;
+}
+
 .board-tile-human.placed-ship {
     background-color: #4ECE7E;
+}
+
+.board-tile-human.hit-ship {
+    background-color: #b50d0d;
 }
 
 .board-tile:hover {
