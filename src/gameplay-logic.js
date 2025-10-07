@@ -65,7 +65,7 @@ function hitBoard(obj) {
         publish('changeTile', {user: board, row, col, reason: 'hit-ship',});
     };
 
-    if(hitResults.isShipSunk === true) {
+    if(hitResult.isShipSunk === true) {
         publish('shipSunk', {user: board, shipType: hitResult.hitShipType,})
     };
 };
