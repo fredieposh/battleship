@@ -1,3 +1,4 @@
+import {subscribeFunction} from './utils.js'
 import {getShipSizeByType} from './ship.js'
 export {loadShipsDisplay};
 
@@ -72,11 +73,12 @@ function colorSunkShip(obj) {
 
 function getSunkShipDom(shipsContainer, shipType) {
     const shipsDivList = shipsContainer.querySelectorAll('.ship-div');
-
-    shipsDivList.forEach((div) => {
+    for(const div of shipsDivList) {
         const shipDivName = div.querySelector('.ship-name-div').innerHTML;
         if (shipType === shipDivName) {
             return div.querySelector('.dom-ship');
         };
-    });
+    };
 };
+
+subscribeFunction('shipSunk' ,colorSunkShip);
