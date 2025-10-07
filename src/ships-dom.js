@@ -56,3 +56,27 @@ function createDomShipPart(shipIndex) {
 
     return part;
 }
+
+function colorSunkShip(obj) {
+    let {user, shipType} = obj;
+    user = user === 'computer' ? 'player-2' : 'player-1';
+    
+    const shipsContainer = document.querySelector(`#${user}-ships-container`);
+    const shipDom = getSunkShipDom(shipsContainer, shipType);
+    const shipNodes = shipDom.childNodes;
+
+    shipNodes.forEach((node) => {
+        node.classList.add('hit-ship');
+    });
+}
+
+function getSunkShipDom(shipsContainer, shipType) {
+    const shipsDivList = shipsContainer.querySelectorAll('.ship-div');
+
+    shipsDivList.forEach((div) => {
+        const shipDivName = div.querySelector('.ship-name-div').innerHTML;
+        if (shipType === shipDivName) {
+            return div.querySelector('.dom-ship');
+        };
+    });
+};
