@@ -4,6 +4,7 @@ import {coinFlip, drawNumner, subscribeFunction} from './utils.js';
 import {publish} from './pub-sub.js';
 export {placeShipsOnAllPlayersBoards};
 
+let currentTurn = 'human';
 const shipBySize = getShipSizeByType();
 const humanGameBoard = new GameBoard();
 const computerGameBoard = new GameBoard();
@@ -68,6 +69,14 @@ function hitBoard(obj) {
     if(hitResult.isShipSunk === true) {
         publish('shipSunk', {user: board, shipType: hitResult.hitShipType,})
     };
+};
+
+function changeTurn() {
+    currentTurn = currentTurn === 'human' ? 'computer' : 'human';
+};
+
+function getCurrentTurn() {
+    return currentTurn;
 };
 
 subscribeFunction('boardHit', hitBoard);
