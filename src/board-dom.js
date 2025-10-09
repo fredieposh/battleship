@@ -2,10 +2,12 @@ import {subscribe, publish} from './pub-sub.js'
 export {loadBoards};
 import {subscribeFunction} from './utils.js'
 
+let currentComputerBoard = 'real';
 const humanUser = 'human';
 const computerUser = 'computer';
 const humanBoardContainer = document.querySelector('#human-board-container');
 const computerBoardContainer = document.querySelector('#computer-board-container');
+const computerContainer = document.querySelector('#computer-container');
 const dummyBoard = createDummyBoardDom();
 
 function loadBoards() {
@@ -13,6 +15,30 @@ function loadBoards() {
     createBoardDom(computerUser, computerBoardContainer );
     populateDummyBoardWithTiles();
 };
+
+function switchComputerBoards(currentComputerBoard) {
+    if (currentComputerBoard === 'real') {
+        currentComputerBoard = 'dummy';
+        emptyComputerContainer();
+        loadBoardToComputerContainer(dummyBoard);
+        return;
+    }
+
+    if (currentComputerBoard === 'dummy') {
+        currentComputerBoard = 'real';
+        emptyComputerContainer();
+        loadBoardToComputerContainer(computerBoardContainer);
+        return;
+    }
+};
+
+function emptyComputerContainer() {
+    computerContainer.innerHTML = '';
+}
+
+function loadBoardToComputerContainer(board) {
+    computerContainer.appendChild(board);
+}
 
 function createBoardDom(user, container) {
     for(let i = 0; i < 10; i++) {
@@ -80,6 +106,7 @@ function boardDomHit(e) {
     const col = +coordinates[1]
 
     publish('boardHit', {board: user, row, col});
+    publish('switchComputerBoard', currentComputerBoard);
 }
 
 function getTileUser(e) {
@@ -129,3 +156,4 @@ function clearTileClasslist(tile) {
 
 subscribeFunction('changeTile',changeTileColor);
 subscribeFunction('changeTileContent',changeTileContent);
+subscribeFunction('switchComputerBoard',switchComputerBoards);
