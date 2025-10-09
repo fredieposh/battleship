@@ -109,6 +109,11 @@ body {
     gap: 20px;
 }
 
+#computer-container {
+    flex: 1;
+    display: flex;
+}
+
 #human-board-container, #computer-board-container {
     flex: 1;
     height: 100%;
