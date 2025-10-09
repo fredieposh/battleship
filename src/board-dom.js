@@ -6,10 +6,12 @@ const humanUser = 'human';
 const computerUser = 'computer';
 const humanBoardContainer = document.querySelector('#human-board-container');
 const computerBoardContainer = document.querySelector('#computer-board-container');
+const dummyBoard = createDummyBoardDom();
 
 function loadBoards() {
     createBoardDom(humanUser, humanBoardContainer );
     createBoardDom(computerUser, computerBoardContainer );
+    populateDummyBoardWithTiles();
 };
 
 function createBoardDom(user, container) {
@@ -20,6 +22,28 @@ function createBoardDom(user, container) {
         };
     };
 };
+
+function createDummyBoardDom() {
+    const dummyBoard = document.createElement('div');
+    dummyBoard.setAttribute('id','dummy-board-container');
+
+    return dummyBoard;
+};
+
+function createDummyBoardTileDiv() {
+    const newTile = document.createElement('div');
+    newTile.classList.add('board-tile-dummy');
+    return newTile;
+};
+
+function populateDummyBoardWithTiles() {
+    for(let i = 0; i < 10; i++) {
+        for(let j = 0; j < 10; j ++) {
+            const newTile = createDummyBoardTileDiv();
+            dummyBoard.appendChild(newTile);
+        };
+    };    
+}
 
 function createBoardTileDiv(user, row, column) {
     const newTile = document.createElement('div');
