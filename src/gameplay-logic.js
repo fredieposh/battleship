@@ -79,4 +79,19 @@ function getCurrentTurn() {
     return currentTurn;
 };
 
+function computerAttack() {
+    const humanBoard = humanGameBoard.getBoard();
+    let row = drawNumner();
+    let col = drawNumner();
+    let humanBoardCoordinateContent = humanBoard[row][col];
+
+    while(humanBoardCoordinateContent === 'x') {
+        row = drawNumner();
+        col = drawNumner();
+        humanBoardCoordinateContent = humanBoard[row][col];
+    };
+
+    publish('boardHit', {board: 'human', row, col});
+}
+
 subscribeFunction('boardHit', hitBoard);
