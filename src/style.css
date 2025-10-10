@@ -128,6 +128,13 @@ body {
     border-radius: 3px;
 }
 
+.board-tile-dummy {
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .board-tile-disabled {
     border: 0.5px solid black;
     background-color: #F4F4F4;
@@ -142,6 +149,10 @@ body {
     border: 0.5px solid black;
     background-color: #F4F4F4;
     border-radius: 3px;
+    font-size: 1.6rem;
+        display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .hit-ship {

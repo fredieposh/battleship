@@ -73,6 +73,7 @@ class GameBoard {
             const ship = this.#ships[shipType];
             const hitShipType = this.#hitShip(ship);
             const isShipSunk = ship.isSunk();
+            this.#board[row][column] = 'x';
             return {hitShipType, shipsCounter: this.#shipsCounter, isShipSunk,};
         };
         

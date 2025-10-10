@@ -96,7 +96,7 @@ describe('test receiveAttack function', () => {
         expect(hitShipType).toBe(ship.getShipType());
         expect(shipsCounter).toBe(1);
         
-        ({hitShipType , shipsCounter} = board.receiveAttack(1, 2));
+        ({hitShipType , shipsCounter} = board.receiveAttack(1, 1));
         expect(hitShipType).toBe(ship.getShipType());
         expect(shipsCounter).toBe(0);
     });

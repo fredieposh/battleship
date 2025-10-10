@@ -2,6 +2,7 @@ import {Ship, getShipSizeByType} from './ship.js';
 import {GameBoard} from './game-board.js';
 import {coinFlip, drawNumner, subscribeFunction} from './utils.js';
 import {publish} from './pub-sub.js';
+import {getCurrentComputerBoard} from './board-dom.js';
 export {placeShipsOnAllPlayersBoards};
 
 let currentTurn = 'human';
@@ -62,6 +63,7 @@ function hitBoard(obj) {
     const hitResult = attackedBoard.receiveAttack(row, col);
     if (hitResult === 'x') {
         publish('changeTileContent', {user: board, row, col, reason: 'blank-hit',});
+        changeTurn();
     } else {
         publish('changeTile', {user: board, row, col, reason: 'hit-ship',});
     };
@@ -69,17 +71,43 @@ function hitBoard(obj) {
     if(hitResult.isShipSunk === true) {
         publish('shipSunk', {user: board, shipType: hitResult.hitShipType,})
     };
+
+    return hitResult;
 };
 
 function changeTurn() {
-    currentTurn = currentTurn === 'human' ? 'computer' : 'human';
+    if(currentTurn === 'human') {
+        publish('switchComputerBoard', getCurrentComputerBoard());
+        currentTurn = 'computer';
+        manageComputerTurn();
+        return;
+    };
+
+    if(currentTurn === 'computer') {
+        publish('switchComputerBoard', getCurrentComputerBoard());
+        currentTurn = 'human';
+        return;
+    };    
 };
 
 function getCurrentTurn() {
     return currentTurn;
 };
 
-function computerAttack() {
+async function manageComputerTurn() {
+    let computerHitResult = await computerAttack();
+
+    while(computerHitResult !== 'x') {
+        computerHitResult = await computerAttack();
+    }
+};
+
+function setDelay() {
+return new Promise(resolve => setTimeout(resolve, 2000));
+};
+
+async function computerAttack() {
+    await setDelay();
     const humanBoard = humanGameBoard.getBoard();
     let row = drawNumner();
     let col = drawNumner();
@@ -91,7 +119,7 @@ function computerAttack() {
         humanBoardCoordinateContent = humanBoard[row][col];
     };
 
-    publish('boardHit', {board: 'human', row, col});
-}
+    return hitBoard({board: 'human', row, col});
+};
 
 subscribeFunction('boardHit', hitBoard);
