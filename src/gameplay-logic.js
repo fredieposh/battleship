@@ -79,6 +79,7 @@ function changeTurn() {
     if(currentTurn === 'human') {
         publish('switchComputerBoard', getCurrentComputerBoard());
         currentTurn = 'computer';
+        publish('changeTurnDisplay', 'Computer\'s Turn');
         manageComputerTurn();
         return;
     };
@@ -86,6 +87,7 @@ function changeTurn() {
     if(currentTurn === 'computer') {
         publish('switchComputerBoard', getCurrentComputerBoard());
         currentTurn = 'human';
+        publish('changeTurnDisplay', 'Your Turn');
         return;
     };    
 };
