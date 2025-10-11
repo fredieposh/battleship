@@ -70,6 +70,9 @@ function hitBoard(obj) {
 
     if(hitResult.isShipSunk === true) {
         publish('shipSunk', {user: board, shipType: hitResult.hitShipType,})
+        if (attackedBoard.getShipCounter() === 0) {
+            publish('endGame', board);
+        };
     };
 
     return hitResult;

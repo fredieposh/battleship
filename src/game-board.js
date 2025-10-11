@@ -52,7 +52,7 @@ class GameBoard {
     };
 
     getShipCounter() {
-        return this.#shipsCounter();
+        return this.#shipsCounter;
     }
 
     receiveAttack(row, column) {
