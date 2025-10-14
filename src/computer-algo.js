@@ -1,3 +1,4 @@
+import {publish} from './pub-sub';
 export {Hit, HitTracker};
 
 class Hit {
@@ -20,6 +21,7 @@ class HitTracker {
     shipType;
     probeDirections;
     nextCoord;
+    lastTrackResult;
 
     constructor(firstHit, shipType, direction = null) {
         this.firstHit = firstHit;
@@ -32,6 +34,7 @@ class HitTracker {
             [-1, 0]
         ]; 
         this.nextCoord = null;
+        this.lastTrackResult = null;
     }
 
     probeForHit(board) {
@@ -46,17 +49,20 @@ class HitTracker {
         };
 
         if (hitResult === 'x') {
+            publish('changeTileContent', {user: 'human', row: hitCoord[0], col: hitCoord[1], reason: 'blank-hit',});
             this.probeDirections.splice(index, 1);
             return hitResult;
         };
 
         if (hitResult.hitShipType !== this.shipType) {
+            publish('changeTile', {user: 'human', row: hitCoord[0], col: hitCoord[1], reason: 'hit-ship',});
             this.probeDirections.splice(index, 1);
             return hitResult.hitShipType;
         };
 
         if (hitResult.hitShipType === this.shipType) {
             this.#loadDirections(this.#returnDirections(direction));
+            publish('changeTile', {user: 'human', row: hitCoord[0], col: hitCoord[1], reason: 'hit-ship',});
             return hitResult.hitShipType;
         };
     };
@@ -92,7 +98,8 @@ class HitTracker {
             };
 
             if (board.getBoard()[this.nextCoord[0]][this.nextCoord[1]] === 'x') {
-                newHit = new Hit(this.nextCoord, this.shipType);
+                const newHit = new Hit(this.nextCoord, this.shipType);
+                this.lastTrackResult = 'tile already explored';
                 return newHit;
             };
 
@@ -101,26 +108,30 @@ class HitTracker {
             if (hitResults === 'A hit coordinates have to be within the board boundries.') {
                 this.direction.splice(0, 1);
                 this.nextCoord = null;
-                newHit = new Hit(this.nextCoord, hitResults);
+                const newHit = new Hit(this.nextCoord, hitResults);
+                this.lastTrackResult = hitResults;
                 return newHit;
             };
 
             if (hitResults === 'x') {
                 this.direction.splice(0, 1);
                 this.nextCoord = null;
-                newHit = new Hit(this.nextCoord, hitResults);
+                const newHit = new Hit(this.nextCoord, hitResults);
+                this.lastTrackResult = hitResults;
                 return newHit;
             };
 
             if (hitResults.hitShipType !== this.shipType) {
                 this.direction.splice(0, 1);
                 this.nextCoord = null;
-                newHit = new Hit(this.nextCoord, hitResults.hitShipType);
+                const newHit = new Hit(this.nextCoord, hitResults.hitShipType);
+                this.lastTrackResult = hitResults.hitShipType;
                 return newHit;
             };
 
             if (hitResults.hitShipType === this.shipType) {
-                newHit = new Hit(this.nextCoord, hitResults.hitShipType);
+                const newHit = new Hit(this.nextCoord, hitResults.hitShipType);
+                this.lastTrackResult = hitResults.hitShipType;
                 return newHit;
             };
 

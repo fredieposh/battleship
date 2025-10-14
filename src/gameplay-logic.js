@@ -1,3 +1,4 @@
+import {Hit, HitTracker} from './computer-algo.js';
 import {Ship, getShipSizeByType} from './ship.js';
 import {GameBoard} from './game-board.js';
 import {coinFlip, drawNumner, subscribeFunction} from './utils.js';
@@ -9,7 +10,7 @@ let currentTurn = 'human';
 const shipBySize = getShipSizeByType();
 const humanGameBoard = new GameBoard();
 const computerGameBoard = new GameBoard();
-
+const hitsTrack = {};
 function placeShipsOnAllPlayersBoards() {
     placeShipsOnBoard(humanGameBoard);
     placeShipsOnBoard(computerGameBoard);
@@ -100,11 +101,50 @@ function getCurrentTurn() {
 };
 
 async function manageComputerTurn() {
-    let computerHitResult = await computerAttack();
+    let tracker;
+    const hitsTrackFirstKey = Object.keys(hitsTrack)[0];
+    if (hitsTrack[hitsTrackFirstKey]) {
+        const tracker = hitsTrack[Object.keys(hitsTrack)[0]];
+        let trackerResult;
+        
+        do {
+            trackerResult = handleTracker(tracker)
+        } while(trackerResult === tracker.shipType);
+        
+        if(trackerResult === 'x') {
+            changeTurn();
+            return;
+        };
 
-    while(computerHitResult !== 'x') {
-        computerHitResult = await computerAttack();
-    }
+        if (trackerResult !== 'A hit coordinates have to be within the board boundries.') {
+            
+        }
+        
+        return;
+    };
+    
+    let computerHitResult = await computerAttack();
+    console.log(hitsTrack[computerHitResult]);
+
+    if(computerHitResult === 'x') {
+        return;
+    };
+
+    if(hitsTrack[computerHitResult]) {
+        tracker = hitsTrack[computerHitResult];
+        let trackerResult;
+
+        do {
+            trackerResult = handleTracker(tracker)
+        } while(trackerResult === tracker.shipType);
+
+        if(trackerResult === 'x') {
+            changeTurn();
+        }
+
+        return;
+    };
+
 };
 
 function setDelay() {
@@ -124,7 +164,28 @@ async function computerAttack() {
         humanBoardCoordinateContent = humanBoard[row][col];
     };
 
-    return hitBoard({board: 'human', row, col});
+    const hitResult = hitBoard({board: 'human', row, col});
+
+    if(hitResult === 'x') {
+        return hitResult;
+    };
+
+    const newHit = new Hit([row, col], hitResult.hitShipType);
+    const newTracker = new HitTracker(newHit, hitResult.hitShipType);
+
+    hitsTrack[hitResult.hitShipType] = newTracker;
+    return hitResult.hitShipType;
 };
+
+function handleTracker(tracker) {
+
+        if(!tracker.direction) {
+            const probeResults = tracker.probeForHit(humanGameBoard);
+            return probeResults;
+        };
+
+        tracker.hitInDirection(tracker.firstHit, humanGameBoard);
+        return tracker.lastTrackResult;
+}
 
 subscribeFunction('boardHit', hitBoard);
